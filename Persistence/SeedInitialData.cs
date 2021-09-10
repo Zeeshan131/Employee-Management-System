@@ -36,6 +36,26 @@ namespace Persistence
                     Developer6 = "",
                     Developer7 = "",
                 },
+                new Project
+                {
+                    Date = DateTime.Now,
+                    Tower = "Resilience",
+                    TechPod = "Pod1",
+                    Solution = "Waste Track",
+                    Status = "Active",
+                    DomainArchitecture = "Muthukumar Vaidhianathan",
+                    ProductOwner = "Jeff Morton",
+                    ScrumMaster = "TBD",
+                    UxDesigner = "Anna Nelson-Daniel",
+                    TechnicalLead = "James Ortega",
+                    Developer1 = "Gary Laitman",
+                    Developer2 = "Timothy Strumfels",
+                    Developer3 = "Avanthi Koneru",
+                    Developer4 = "Chetan Kumar (9/20)",
+                    Developer5 = "Tech/Open Req/US",
+                    Developer6 = "",
+                    Developer7 = "",
+                },
             };
             await context.Projects.AddRangeAsync(projects);
             await context.SaveChangesAsync();
