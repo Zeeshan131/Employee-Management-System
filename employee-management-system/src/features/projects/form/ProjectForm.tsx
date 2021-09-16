@@ -6,9 +6,10 @@ interface Props {
     project: Project | undefined;
     closeForm: () => void;
     createOrEdit: (project: Project) => void;
+    submitting: boolean;
 }
 
-function ProjectForm({ project: selectedProject, closeForm, createOrEdit }: Props) {
+function ProjectForm({ project: selectedProject, closeForm, createOrEdit, submitting }: Props) {
 
     const initialState = selectedProject ?? {
         id: '',
@@ -45,6 +46,7 @@ function ProjectForm({ project: selectedProject, closeForm, createOrEdit }: Prop
     return (
         <Segment clearing>
             <Form onSubmit={handleSubmit} autoComplete='off'>
+                <Form.Input type='date' placeholder='Date' value={project.date} name='date' onChange={handleInputChange} />
                 <Form.Input placeholder='Tower' value={project.tower} name='tower' onChange={handleInputChange} />
                 <Form.Input placeholder='Tech Pod' value={project.techPod} name='techPod' onChange={handleInputChange} />
                 <Form.Input placeholder='Solution' value={project.solution} name='solution' onChange={handleInputChange} />
@@ -61,7 +63,7 @@ function ProjectForm({ project: selectedProject, closeForm, createOrEdit }: Prop
                 <Form.Input placeholder='Developer 5' value={project.developer5} name='developer5' onChange={handleInputChange} />
                 <Form.Input placeholder='Developer 6' value={project.developer6} name='developer6' onChange={handleInputChange} />
                 <Form.Input placeholder='Developer 7' value={project.developer7} name='developer7' onChange={handleInputChange} />
-                <Button floated='right' positive type='submit' content='Submit' />
+                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
                 <Button onClick={closeForm} floated='right' type='button' content='Cancel' />
             </Form>
         </Segment>

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, SyntheticEvent, useState } from 'react';
 import { Button, Icon, Table } from 'semantic-ui-react';
 import { Project } from '../../../app/models/project';
 
@@ -7,9 +7,18 @@ interface Props {
     selectProject: (id: string) => void;
     openForm: (id: string) => void;
     deleteProject: (id: string) => void;
+    submitting: boolean;
 }
 
-function ProjectList({ projects, selectProject, openForm, deleteProject }: Props) {
+function ProjectList({ projects, selectProject, openForm, deleteProject, submitting }: Props) {
+
+    const [target, setTarget] = useState('');
+
+    const handleProjectDelete = (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
+        setTarget(e.currentTarget.name);
+        deleteProject(id);
+    }
+
     return (
         <Fragment>
             {projects.map(project => (
@@ -37,7 +46,13 @@ function ProjectList({ projects, selectProject, openForm, deleteProject }: Props
                         <Button onClick={() => openForm(project.id)} basic color='blue' content='Edit Project' />
                     </Table.Cell>
                     <Table.Cell>
-                        <Button onClick={() => deleteProject(project.id)} basic color='red' content='Delete Project' />
+                        <Button 
+                            name={project.id}
+                            loading={submitting && target === project.id} 
+                            onClick={(e) => handleProjectDelete(e, project.id)} 
+                            basic 
+                            color='red' 
+                            content='Delete Project' />
                     </Table.Cell>
                 </Table.Row>
             ))}

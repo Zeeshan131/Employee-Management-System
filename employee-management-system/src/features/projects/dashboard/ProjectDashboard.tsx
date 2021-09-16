@@ -13,9 +13,11 @@ interface Props {
     closeForm: () => void;
     createOrEdit: (project: Project) => void;
     deleteProject: (id: string) => void;
+    submitting: boolean;
 }
 
-function ProjectDashboard({ projects, selectedProject, selectProject, cancelSelectProject, editMode, openForm, closeForm, createOrEdit, deleteProject }: Props) {
+function ProjectDashboard({ projects, selectedProject, selectProject, cancelSelectProject, 
+    editMode, openForm, closeForm, createOrEdit, deleteProject, submitting }: Props) {
     return (
         <Grid>
             <Grid.Column width='16'>
@@ -75,6 +77,7 @@ function ProjectDashboard({ projects, selectedProject, selectProject, cancelSele
                             selectProject = {selectProject}
                             openForm = {openForm}
                             deleteProject = {deleteProject}
+                            submitting = {submitting}
                         />
                     </Table.Body>
                 </Table>
@@ -83,6 +86,7 @@ function ProjectDashboard({ projects, selectedProject, selectProject, cancelSele
                     closeForm = {closeForm} 
                     project = {selectedProject}
                     createOrEdit = {createOrEdit}
+                    submitting = {submitting}
                 />}
             </Grid.Column>
         </Grid>
