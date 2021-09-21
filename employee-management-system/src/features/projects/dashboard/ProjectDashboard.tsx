@@ -1,15 +1,21 @@
+import { useEffect } from 'react';
 import { Grid, Table } from 'semantic-ui-react';
 import ProjectList from './ProjectList';
-import ProjectForm from '../form/ProjectForm';
 import classes from './styles.module.css';
 import { useStore } from '../../../app/stores/store';
 import { observer } from 'mobx-react-lite';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 
 function ProjectDashboard() {
 
     const { projectStore } = useStore();
+    const {loadProjects, projects} = projectStore;
 
-    const { editMode } = projectStore;
+    useEffect(() => {
+        if (projects.size <= 1) loadProjects();
+    }, [projects.size, loadProjects]);
+
+    if (projectStore.loadingInitial) return <LoadingComponent content='Loading App' />
 
     return (
         <Grid>
@@ -41,8 +47,6 @@ function ProjectDashboard() {
                         <ProjectList />
                     </Table.Body>
                 </Table>
-                {editMode &&
-                    <ProjectForm />}
             </Grid.Column>
         </Grid>
     )

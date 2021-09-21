@@ -1,14 +1,19 @@
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Button, Form, Segment } from 'semantic-ui-react';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
+import { v4 as uuid } from 'uuid';
 
 function ProjectForm() {
-
+    const history = useHistory();
     const { projectStore } = useStore();
-    const { selectedProject, closeForm, createProject, updateProject, loading } = projectStore;
+    const { createProject, updateProject, loading, loadProject, loadingInitial } = projectStore;
+    const { id } = useParams<{ id: string }>();
 
-    const initialState = selectedProject ?? {
+    const [project, setProject] = useState({
         id: '',
         date: '',
         tower: '',
@@ -27,18 +32,30 @@ function ProjectForm() {
         developer5: '',
         developer6: '',
         developer7: '',
-    }
+    });
 
-    const [project, setProject] = useState(initialState);
+    useEffect(() => {
+        if (id) loadProject(id).then(project => setProject(project!));
+    }, [id, loadProject]);
 
     const handleSubmit = () => {
-        project.id ? updateProject(project) : createProject(project);
+        if (project.id.length === 0) {
+            let newProject = {
+                ...project,
+                id: uuid()
+            };
+            createProject(newProject).then(() => history.push(`/projects`));
+        } else {
+            updateProject(project).then(() => history.push(`/projects`));
+        }
     }
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setProject({ ...project, [name]: value });
     }
+
+    if (loadingInitial || !project) return <LoadingComponent content='Loading project...' />
 
     return (
         <Segment clearing>
@@ -61,7 +78,7 @@ function ProjectForm() {
                 <Form.Input placeholder='Developer 6' value={project.developer6} name='developer6' onChange={handleInputChange} />
                 <Form.Input placeholder='Developer 7' value={project.developer7} name='developer7' onChange={handleInputChange} />
                 <Button.Group floated='right'>
-                    <Button onClick={closeForm} type='button' content='Cancel' />
+                    <Button as={Link} to='/projects' type='button' content='Cancel' />
                     <Button.Or />
                     <Button loading={loading} floated='right' positive type='submit' content='Submit' />
                 </Button.Group>

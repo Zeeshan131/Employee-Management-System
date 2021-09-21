@@ -1,22 +1,20 @@
-import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { Button, Container, Menu } from 'semantic-ui-react';
-import { useStore } from '../stores/store';
 
 function NavBar() {
-
-    const { projectStore } = useStore();
 
     return (
         <Menu inverted fixed='top'>
             <Container>
-                <Menu.Item header>
+                <Menu.Item as={NavLink} to='/' exact header>
                     <img src="/assets/logo.png" alt="logo" style={{ marginRight: 10 }} />
                     Employee Management System
                 </Menu.Item>
-                <Menu.Item name='Projects' />
+                <Menu.Item as={NavLink} to='/projects' name='Projects' />
                 <Menu.Item>
                     <Button
-                        onClick={() => projectStore.openForm()}
+                        as={NavLink}
+                        to='createProject'
                         positive
                         content='Create Project' />
                 </Menu.Item>

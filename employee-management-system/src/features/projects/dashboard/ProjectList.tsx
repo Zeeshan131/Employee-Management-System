@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { Fragment, SyntheticEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Icon, Table } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 import classes from './styles.module.css';
@@ -41,7 +42,8 @@ function ProjectList() {
                     <Table.Cell>{project.developer7}</Table.Cell>
                     <Table.Cell>
                         <Button
-                            onClick={() => projectStore.openForm(project.id)}
+                            as={Link}
+                            to={`/manage/${project.id}`}
                             inverted
                             color='blue'
                             content='Edit Project' />
