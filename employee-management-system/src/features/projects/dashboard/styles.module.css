@@ -1,0 +1,9 @@
+.tableRow {
+    text-align: center;
+}
+
+.tower,
+.techPod,
+.solution {
+    color: darkorange;
+}

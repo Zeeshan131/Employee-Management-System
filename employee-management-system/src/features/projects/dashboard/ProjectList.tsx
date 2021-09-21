@@ -1,16 +1,13 @@
+import { observer } from 'mobx-react-lite';
 import { Fragment, SyntheticEvent, useState } from 'react';
 import { Button, Icon, Table } from 'semantic-ui-react';
-import { Project } from '../../../app/models/project';
+import { useStore } from '../../../app/stores/store';
+import classes from './styles.module.css';
 
-interface Props {
-    projects: Project[];
-    selectProject: (id: string) => void;
-    openForm: (id: string) => void;
-    deleteProject: (id: string) => void;
-    submitting: boolean;
-}
+function ProjectList() {
 
-function ProjectList({ projects, selectProject, openForm, deleteProject, submitting }: Props) {
+    const { projectStore } = useStore();
+    const { projectByDate, deleteProject, loading } = projectStore;
 
     const [target, setTarget] = useState('');
 
@@ -21,11 +18,11 @@ function ProjectList({ projects, selectProject, openForm, deleteProject, submitt
 
     return (
         <Fragment>
-            {projects.map(project => (
-                <Table.Row key={project.id}>
-                    <Table.Cell>{project.tower}</Table.Cell>
-                    <Table.Cell>{project.techPod}</Table.Cell>
-                    <Table.Cell>{project.solution}</Table.Cell>
+            {projectByDate.map(project => (
+                <Table.Row key={project.id} className={classes.tableRow}>
+                    <Table.Cell className={classes.tower}>{project.tower}</Table.Cell>
+                    <Table.Cell className={classes.techPod}>{project.techPod}</Table.Cell>
+                    <Table.Cell className={classes.solution}>{project.solution}</Table.Cell>
                     <Table.Cell positive>
                         <Icon name='checkmark' />
                         {project.status}
@@ -43,15 +40,19 @@ function ProjectList({ projects, selectProject, openForm, deleteProject, submitt
                     <Table.Cell>{project.developer6}</Table.Cell>
                     <Table.Cell>{project.developer7}</Table.Cell>
                     <Table.Cell>
-                        <Button onClick={() => openForm(project.id)} basic color='blue' content='Edit Project' />
+                        <Button
+                            onClick={() => projectStore.openForm(project.id)}
+                            inverted
+                            color='blue'
+                            content='Edit Project' />
                     </Table.Cell>
                     <Table.Cell>
-                        <Button 
+                        <Button
                             name={project.id}
-                            loading={submitting && target === project.id} 
-                            onClick={(e) => handleProjectDelete(e, project.id)} 
-                            basic 
-                            color='red' 
+                            loading={loading && target === project.id}
+                            onClick={(e) => handleProjectDelete(e, project.id)}
+                            inverted
+                            color='red'
                             content='Delete Project' />
                     </Table.Cell>
                 </Table.Row>
@@ -60,4 +61,4 @@ function ProjectList({ projects, selectProject, openForm, deleteProject, submitt
     )
 }
 
-export default ProjectList;
+export default observer(ProjectList);

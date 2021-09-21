@@ -1,15 +1,12 @@
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useState } from 'react';
 import { Button, Form, Segment } from 'semantic-ui-react';
-import { Project } from '../../../app/models/project';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-    project: Project | undefined;
-    closeForm: () => void;
-    createOrEdit: (project: Project) => void;
-    submitting: boolean;
-}
+function ProjectForm() {
 
-function ProjectForm({ project: selectedProject, closeForm, createOrEdit, submitting }: Props) {
+    const { projectStore } = useStore();
+    const { selectedProject, closeForm, createProject, updateProject, loading } = projectStore;
 
     const initialState = selectedProject ?? {
         id: '',
@@ -35,12 +32,12 @@ function ProjectForm({ project: selectedProject, closeForm, createOrEdit, submit
     const [project, setProject] = useState(initialState);
 
     const handleSubmit = () => {
-        createOrEdit(project);
+        project.id ? updateProject(project) : createProject(project);
     }
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target;
-        setProject({...project, [name]: value});
+        const { name, value } = event.target;
+        setProject({ ...project, [name]: value });
     }
 
     return (
@@ -63,11 +60,14 @@ function ProjectForm({ project: selectedProject, closeForm, createOrEdit, submit
                 <Form.Input placeholder='Developer 5' value={project.developer5} name='developer5' onChange={handleInputChange} />
                 <Form.Input placeholder='Developer 6' value={project.developer6} name='developer6' onChange={handleInputChange} />
                 <Form.Input placeholder='Developer 7' value={project.developer7} name='developer7' onChange={handleInputChange} />
-                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
-                <Button onClick={closeForm} floated='right' type='button' content='Cancel' />
+                <Button.Group floated='right'>
+                    <Button onClick={closeForm} type='button' content='Cancel' />
+                    <Button.Or />
+                    <Button loading={loading} floated='right' positive type='submit' content='Submit' />
+                </Button.Group>
             </Form>
         </Segment>
     )
 }
 
-export default ProjectForm;
+export default observer(ProjectForm);
